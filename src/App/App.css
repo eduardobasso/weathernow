@@ -1,0 +1,33 @@
+.main-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-height: calc(100vh - 2 * 58px);
+  padding: 0;
+}
+
+.boxes-container {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .main-content {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .boxes-container {
+    flex-flow: column;
+  }
+}

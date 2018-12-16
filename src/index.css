@@ -1,0 +1,26 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  background-color: #f1f1f1;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+}
+
+p:first-child {
+  margin-top: 0;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+small {
+  font-size: .675em;
+}
+
+* {
+  box-sizing: border-box;
+}
