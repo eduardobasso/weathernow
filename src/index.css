@@ -21,6 +21,10 @@ small {
   font-size: .675em;
 }
 
+button:not([disabled]) {
+  cursor: pointer;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -12,7 +12,8 @@ const DATE_FORMAT = "hh:mm:ss a";
 class Card extends Component {
   constructor(props) {
     super(props);
-    this.state = { location: props.searchQuery.split(",").join(", "), loaded: false };
+    this.state = { location: props.searchQuery.split(",").join(", "), loaded: false, error: true };
+    this.getData = this.getData.bind(this);
   }
 
   kelvinToCelsius(t) {
@@ -22,45 +23,21 @@ class Card extends Component {
 
   getData() {
     fetch(`${API_URL}?q=${this.props.searchQuery}&APPID=${ACCOUNT_APPID}`).then(response => response.json()).then((result) => {
-      console.log(result);
       this.setState({
         location: `${result.name}, ${result.sys.country}`,
         temperature: Math.round(this.kelvinToCelsius(result.main.temp)),
         humidity: Math.round(result.main.humidity),
         pressure: Math.round(result.main.pressure),
         lastUpdate: new Date(),
-        loaded: true
+        loaded: true,
+        error: false
       });
     }, (error) => {
-      console.log(error);
       this.setState({
-        error,
-        loaded: true
+        loaded: true,
+        error: true
       });
     });
-  }
-
-  showDetails() {
-    if (this.props.showDetails) {
-      return (
-        <div className="more-details">
-          <div className="display">
-            <dl>
-              <dt>Humidity</dt>
-              <dd>{this.state.humidity}<small aria-label="Percent">%</small></dd>
-            </dl>
-          </div>
-          <div className="display">
-            <dl>
-              <dt>Pressure</dt>
-              <dd>{this.state.pressure}<small aria-label="Hecto Pascal">hPa</small></dd>
-            </dl>
-          </div>
-        </div>
-      );
-    } else {
-      return null;
-    }
   }
 
   componentDidMount() {
@@ -73,25 +50,83 @@ class Card extends Component {
   }
 
   render() {
-    let displayClass = "display";
-    if (this.state.temperature > 25) {
-      displayClass += " hot";
-    } else if (this.state.temperature < 5) {
-      displayClass += " cold";
-    }
+    const Body = () => {
+      let displayClass = "display";
+      if (this.state.temperature > 25) {
+        displayClass += " hot";
+      } else if (this.state.temperature < 5) {
+        displayClass += " cold";
+      }
+
+      if (this.state.loaded) {
+        if (this.state.error) {
+          return (
+            <div className="card-body overlay">
+              <div className="error">
+                <p>Something went wrong</p>
+                <button type="button" onClick={this.getData}>Try again</button>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div className="card-body">
+              <span className={displayClass}>{this.state.temperature}<small aria-label="Degrees Celsius">˚</small></span>
+            </div>
+          );
+        }
+      } else {
+        return (
+          <div className="card-body overlay">
+            <img src={loader} alt="Loading icon" width="56" height="56" />
+          </div>
+        );
+      }
+    };
+
+    const Footer = () => {
+      const Details = () => {
+        if (this.props.showDetails) {
+          return (
+            <div className="more-details">
+              <div className="display">
+                <dl>
+                  <dt>Humidity</dt>
+                  <dd>{this.state.humidity}<small aria-label="Percent">%</small></dd>
+                </dl>
+              </div>
+              <div className="display">
+                <dl>
+                  <dt>Pressure</dt>
+                  <dd>{this.state.pressure}<small aria-label="Hecto Pascal">hPa</small></dd>
+                </dl>
+              </div>
+            </div>
+          );
+        } else {
+          return null;
+        }
+      };
+      
+      if (this.state.loaded && ! this.state.error) {
+        return (
+          <footer className="card-footer">
+            <Details />
+            <p>Updated at <Moment format={DATE_FORMAT}>{this.state.lastUpdate}</Moment></p>
+          </footer>
+        );
+      } else {
+        return null;
+      }
+    };
 
     return (
       <article className="card">
         <header className="card-header">
           <h3>{this.state.location}</h3>
         </header>
-        <div className="card-body">
-          <span className={displayClass}>{this.state.temperature}<small aria-label="Degrees Celsius">˚</small></span>
-        </div>
-        <footer className="card-footer">
-          {this.showDetails()}
-          <p>Updated at <Moment format={DATE_FORMAT}>{this.state.lastUpdate}</Moment></p>
-        </footer>
+        <Body />
+        <Footer />
       </article>
     );
   }

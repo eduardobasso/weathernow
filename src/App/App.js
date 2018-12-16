@@ -14,7 +14,7 @@ class App extends Component {
           <div className="boxes-container">
             <Card
               searchQuery="Nuuk,GL"
-              showDetails={true}
+              loading={true}
             />
             <Card
               searchQuery="Urubici,BR"
@@ -22,7 +22,6 @@ class App extends Component {
             />
             <Card
               searchQuery="Nairobi,KE"
-              showDetails={true}
             />
           </div>
         </section>
