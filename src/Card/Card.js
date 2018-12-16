@@ -22,16 +22,26 @@ class Card extends Component {
   }
 
   getData() {
+    this.setState({
+      loaded: false,
+      error: false
+    });
     fetch(`${API_URL}?q=${this.props.searchQuery}&APPID=${ACCOUNT_APPID}`).then(response => response.json()).then((result) => {
-      this.setState({
-        location: `${result.name}, ${result.sys.country}`,
-        temperature: Math.round(this.kelvinToCelsius(result.main.temp)),
-        humidity: Math.round(result.main.humidity),
-        pressure: Math.round(result.main.pressure),
-        lastUpdate: new Date(),
-        loaded: true,
-        error: false
-      });
+      try {
+        this.setState({
+          location: `${result.name}, ${result.sys.country}`,
+          temperature: Math.round(this.kelvinToCelsius(result.main.temp)),
+          humidity: Math.round(result.main.humidity),
+          pressure: Math.round(result.main.pressure),
+          lastUpdate: new Date(),
+          loaded: true
+        });
+      } catch {
+        this.setState({
+          loaded: true,
+          error: true
+        });
+      }
     }, (error) => {
       this.setState({
         loaded: true,

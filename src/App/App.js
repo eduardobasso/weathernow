@@ -14,7 +14,6 @@ class App extends Component {
           <div className="boxes-container">
             <Card
               searchQuery="Nuuk,GL"
-              loading={true}
             />
             <Card
               searchQuery="Urubici,BR"
