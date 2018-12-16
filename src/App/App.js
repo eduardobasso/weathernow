@@ -9,25 +9,20 @@ class App extends Component {
       <div className="App">
         <h1 hidden>Weather Now</h1>
         <Topbar />
-        <section class="main-content">
+        <section className="main-content">
           <h2 hidden>Main cities</h2>
           <div className="boxes-container">
             <Card
-              location="Nuuk, GL"
-              temperature={-4}
-              lastUpdate="02:48:32 PM"
+              searchQuery="Nuuk,GL"
+              showDetails={true}
             />
             <Card
-              location="Urubici, BR"
-              temperature={19}
-              lastUpdate="02:48:27 PM"
-              humidity={75}
-              pressure={892}
+              searchQuery="Urubici,BR"
+              showDetails={true}
             />
             <Card
-              location="Nairobi, KE"
-              temperature={31}
-              lastUpdate="02:48:30 PM"
+              searchQuery="Nairobi,KE"
+              showDetails={true}
             />
           </div>
         </section>
