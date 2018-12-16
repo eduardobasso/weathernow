@@ -12,7 +12,7 @@ const DATE_FORMAT = "hh:mm:ss a";
 class Card extends Component {
   constructor(props) {
     super(props);
-    this.state = { location: props.searchQuery.split(",").join(", "), loaded: false, error: true };
+    this.state = { location: props.searchQuery.split(",").join(", "), loaded: false, error: false };
     this.getData = this.getData.bind(this);
   }
 
