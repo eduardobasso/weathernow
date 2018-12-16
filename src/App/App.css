@@ -13,15 +13,6 @@
   align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 960px) {
   .main-content {
     padding-top: 15px;
