@@ -64,7 +64,7 @@ class Card extends Component {
       let displayClass = "display";
       if (this.state.temperature > 25) {
         displayClass += " hot";
-      } else if (this.state.temperature < 5) {
+      } else if (this.state.temperature <= 5) {
         displayClass += " cold";
       }
 
