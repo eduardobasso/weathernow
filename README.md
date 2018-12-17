@@ -10,11 +10,11 @@ Para acessar a aplicação em ambiente de desenvolvimento (dev), é necessário 
 
 ### 1. Instalação dos pacotes do Node (NPM)
 
-Rodar ```npm install``` na raiz do projeto.
+Executar o comando ```npm install``` na raiz do projeto.
 
 ### 2. Ligar o servidor local com a aplicação
 
-Rodar ```npm start``` na raiz do projeto.
+Após instalados todos os pacotes, executar o comando ```npm start``` também na raiz do projeto.
 
 Uma nova aba do navegador padrão será aberta executando a aplicação.
 
