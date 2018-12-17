@@ -1,12 +1,12 @@
 # Weather Now
 
-Aplicação web que exibe a temperatura em três cidades diferentes utilizando a API do OpenWeatherMap.
+Aplicação web que exibe a temperatura em três cidades diferentes utilizando a [API do OpenWeatherMap](https://openweathermap.org/api).
 
 ## Deploy
 
-Esse repositório contém toda a estrutura da camada de front-end (que é executada no client).
+Esse repositório contém toda a estrutura da camada de front-end (que é visualizada no client).
 
-Para executar a aplicação em ambiente de desenvolvimento (dev), é necessário instalar os pacotes necessários e então acionar o servidor local. Os passos são os seguintes:
+Para acessar a aplicação em ambiente de desenvolvimento (dev), é necessário instalar os pacotes necessários e então acionar o servidor local.
 
 ### 1. Instalação dos pacotes do Node (NPM)
 
