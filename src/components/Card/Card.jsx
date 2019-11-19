@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import loader from './loader.svg';
-import './Card.css';
+import Axios from 'axios';
+
+import { WEATHER } from "../../data/endpoints";
+
+import "./Card.scss";
+
+import Loader from "../../assets/img/loader.svg";
 
 const REQUEST_INTERVAL_MINUTES = 10;
-const API_URL = "https://api.openweathermap.org/data/2.5/weather";
-const ACCOUNT_APPID = "87be0f03d77bdbe5bba92410c0f4d160";
 const DATE_FORMAT = "hh:mm:ss a";
 
 class Card extends Component {
   constructor(props) {
     super(props);
-    this.state = { location: props.searchQuery.split(",").join(", "), loaded: false, error: false };
+
+    this.state = {
+      location: props.searchQuery.split(",").join(", "),
+      temperature: null,
+      humidity: null,
+      pressure: null,
+      lastUpdate: null,
+      loaded: false,
+      error: false
+    };
     this.getData = this.getData.bind(this);
   }
 
@@ -26,23 +38,31 @@ class Card extends Component {
       loaded: false,
       error: false
     });
-    fetch(`${API_URL}?q=${this.props.searchQuery}&APPID=${ACCOUNT_APPID}`).then(response => response.json()).then((result) => {
-      try {
+
+    Axios.get(WEATHER, {
+      params: {
+        q: this.props.searchQuery,
+        APPID: process.env.ACCOUNT_APPID
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        const { name, sys: { country }, main: { temp, humidity, pressure } } = response.data;
+        
         this.setState({
-          location: `${result.name}, ${result.sys.country}`,
-          temperature: Math.round(this.kelvinToCelsius(result.main.temp)),
-          humidity: Math.round(result.main.humidity),
-          pressure: Math.round(result.main.pressure),
+          location: `${name}, ${country}`,
+          temperature: Math.round(this.kelvinToCelsius(temp)),
+          humidity: Math.round(humidity),
+          pressure: Math.round(pressure),
           lastUpdate: new Date(),
           loaded: true
         });
-      } catch {
+      } else {
         this.setState({
           loaded: true,
           error: true
         });
       }
-    }, (error) => {
+    }).catch(() => {
       this.setState({
         loaded: true,
         error: true
@@ -60,16 +80,17 @@ class Card extends Component {
   }
 
   render() {
+    const { location, temperature, humidity, pressure, lastUpdate, loaded, error } = this.state;
     const Body = () => {
       let displayClass = "display";
-      if (this.state.temperature > 25) {
+      if (temperature > 25) {
         displayClass += " hot";
-      } else if (this.state.temperature <= 5) {
+      } else if (temperature <= 5) {
         displayClass += " cold";
       }
 
-      if (this.state.loaded) {
-        if (this.state.error) {
+      if (loaded) {
+        if (error) {
           return (
             <div className="card-body overlay">
               <div className="error">
@@ -81,19 +102,18 @@ class Card extends Component {
         } else {
           return (
             <div className="card-body">
-              <span className={displayClass}>{this.state.temperature}<small aria-label="Degrees Celsius">˚</small></span>
+              <span className={displayClass}>{temperature}<small aria-label="Degrees Celsius">˚</small></span>
             </div>
           );
         }
       } else {
         return (
           <div className="card-body overlay">
-            <img src={loader} alt="Loading icon" width="56" height="56" />
+            <img src={Loader} alt="Loading icon" width="56" height="56" />
           </div>
         );
       }
     };
-
     const Footer = () => {
       const Details = () => {
         if (this.props.showDetails) {
@@ -102,13 +122,13 @@ class Card extends Component {
               <div className="display">
                 <dl>
                   <dt>Humidity</dt>
-                  <dd>{this.state.humidity}<small aria-label="Percent">%</small></dd>
+                  <dd>{humidity}<small aria-label="Percent">%</small></dd>
                 </dl>
               </div>
               <div className="display">
                 <dl>
                   <dt>Pressure</dt>
-                  <dd>{this.state.pressure}<small aria-label="Hecto Pascal">hPa</small></dd>
+                  <dd>{pressure}<small aria-label="Hecto Pascal">hPa</small></dd>
                 </dl>
               </div>
             </div>
@@ -118,11 +138,11 @@ class Card extends Component {
         }
       };
       
-      if (this.state.loaded && ! this.state.error) {
+      if (loaded && ! error) {
         return (
           <footer className="card-footer">
             <Details />
-            <p>Updated at <Moment format={DATE_FORMAT}>{this.state.lastUpdate}</Moment></p>
+            <p>Updated at <Moment format={DATE_FORMAT}>{lastUpdate}</Moment></p>
           </footer>
         );
       } else {
@@ -133,7 +153,7 @@ class Card extends Component {
     return (
       <article className="card">
         <header className="card-header">
-          <h3>{this.state.location}</h3>
+          <h3>{location}</h3>
         </header>
         <Body />
         <Footer />
